@@ -13,7 +13,7 @@ dependencies:
   - diff-cover>=7.7.0
   - pip>=23.2.1
   - pre-commit>=3.3.3
-  - python>=3.10.12
+  - python>=3.12
   - pytest>=7.4.0
   - pytest-asyncio>=0.16.0
   - setuptools>=68.0.0
@@ -35,8 +35,8 @@ dependencies:
   - msgpack-python
   - numpy>=1.25.0,<2
   - objgraph
-  - pandas>=2.0.3
-  - pandas-ta>=0.3.14b
+  - pandas>=2.3.0,<2.4.0
+  - pandas-ta==0.4.71b0
   - prompt_toolkit>=3.0.39
   - protobuf>=4.23.3
   - psutil>=5.9.5
