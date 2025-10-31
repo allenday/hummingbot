@@ -106,7 +106,15 @@ def main():
         })
 
     if is_posix:
-        cython_kwargs["nthreads"] = cpu_count
+        # Allow overriding Cython parallelism via env (useful in sandboxes)
+        nthreads_env = os.environ.get("HB_CYTHON_NTHREADS")
+        if nthreads_env is not None:
+            try:
+                cython_kwargs["nthreads"] = int(nthreads_env)
+            except ValueError:
+                cython_kwargs["nthreads"] = cpu_count
+        else:
+            cython_kwargs["nthreads"] = cpu_count
 
     if "DEV_MODE" in os.environ:
         version += ".dev1"
@@ -115,8 +123,13 @@ def main():
         ]
         package_data["hummingbot"].append("core/cpp/*.cpp")
 
-    if len(sys.argv) > 1 and sys.argv[1] == "build_ext" and is_posix:
-        sys.argv.append(f"--parallel={cpu_count}")
+    if is_posix:
+        # Allow overriding build parallelism via env (useful in sandboxes)
+        parallel_env = os.environ.get("HB_BUILD_PARALLEL")
+        if parallel_env is not None:
+            sys.argv.append(f"--parallel={parallel_env}")
+        elif len(sys.argv) > 1 and sys.argv[1] == "build_ext":
+            sys.argv.append(f"--parallel={cpu_count}")
 
     setup(name="hummingbot",
           version=version,
@@ -129,6 +142,18 @@ def main():
           packages=packages,
           package_data=package_data,
           install_requires=install_requires,
+          extras_require={
+              # Optional groups to keep base install lean and platform neutral
+              "tests": [
+                  "pytest",
+                  "pytest-asyncio",
+                  "coverage>=7.0",
+              ],
+              # Vertex connector extras; isolates third-party deps from base install
+              "vertex": [
+                  "eip712-structs>=1.1.0",
+              ],
+          },
           ext_modules=cythonize(cython_sources, compiler_directives=compiler_directives, **cython_kwargs),
           include_dirs=[
               np.get_include()

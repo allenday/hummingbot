@@ -19,7 +19,9 @@ exclude = '''
 '''
 
 [build-system]
-requires = ["setuptools", "wheel", "numpy>=1.26.0,<3.0.0", "cython>=3.0.0"]
+# Build against NumPy >= 2.0 so compiled C extensions are compatible with
+# both NumPy 1.x and 2.x runtimes, per NumPy 2.0 migration guidance.
+requires = ["setuptools", "wheel", "numpy>=2.0", "cython>=3.0.0"]
 
 [tool.isort]
 line_length = 120
