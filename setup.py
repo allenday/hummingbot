@@ -123,13 +123,13 @@ def main():
         ]
         package_data["hummingbot"].append("core/cpp/*.cpp")
 
-    if is_posix:
-        # Allow overriding build parallelism via env (useful in sandboxes)
-        parallel_env = os.environ.get("HB_BUILD_PARALLEL")
-        if parallel_env is not None:
-            sys.argv.append(f"--parallel={parallel_env}")
-        elif len(sys.argv) > 1 and sys.argv[1] == "build_ext":
-            sys.argv.append(f"--parallel={cpu_count}")
+#    if is_posix:
+#        # Allow overriding build parallelism via env (useful in sandboxes)
+#        parallel_env = os.environ.get("HB_BUILD_PARALLEL")
+#        if parallel_env is not None:
+#            sys.argv.append(f"--parallel={parallel_env}")
+#        elif len(sys.argv) > 1 and sys.argv[1] == "build_ext":
+#            sys.argv.append(f"--parallel={cpu_count}")
 
     setup(name="hummingbot",
           version=version,
